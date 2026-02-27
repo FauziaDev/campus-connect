@@ -1,4 +1,4 @@
-#! C:\Users\aiman\AppData\Local\Programs\Python\Python310-32\python.exe
+#! C:\Users\fauzia\AppData\Local\Programs\Python\Python310-32\python.exe
 print("Content-Type: text/html\r\n\r\n")
 import cgi
 #!/usr/bin/python
