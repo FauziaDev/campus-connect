@@ -1,37 +1,10 @@
-# Use an official Python and Apache image
-FROM python:3.10-slim
+from flask import Flask, render_template
 
-# Install Apache and CGI module
-RUN apt-get update && \
-    apt-get install -y apache2 apache2-utils && \
-    apt-get clean
+app = Flask(__name__)
 
-# Enable CGI module
-RUN a2enmod cgi
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-# Set up the working directory
-WORKDIR /app
-
-# Copy your project files into the container
-COPY . /app
-
-# Make all .py files executable
-RUN chmod +x /app/*.py
-
-# Make /app the web root for Apache
-RUN rm -rf /var/www/html && ln -s /app /var/www/html
-
-# Configure Apache to allow CGI in /app
-RUN echo "ScriptAlias /cgi-bin/ /app/\n\
-<Directory \"/app\">\n\
-    Options +ExecCGI\n\
-    AddHandler cgi-script .py\n\
-    Require all granted\n\
-</Directory>" > /etc/apache2/conf-available/webtask-cgi.conf \
-    && a2enconf webtask-cgi
-
-# Expose port 80
-EXPOSE 80
-
-# Start Apache in the foreground
-CMD ["apachectl", "-D", "FOREGROUND"]
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
